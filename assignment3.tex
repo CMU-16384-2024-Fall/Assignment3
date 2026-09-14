@@ -592,6 +592,30 @@ python local_autograder.py
     encountered.
 \end{questions}
 
+\section{Hands-on Lab}
+Stuff and things (READ ALBERTS NOTES IN COMMENTS)
+% Albert's notes:
+% - Include instructions for turning on arm, E-stop, safety.
+% - Include instruction for free-drive (``python -m xarm7_lib.free_drive'')
+% - How to edit code on machine (vim, nano, code? - not installed yet)
+% - Tell them to use git?
+% - We should probably have them re-install / update their 16384 lab environment on their local machine, via the 16384-robot-lib git repo + `conda env update -f enviroment.yml`
+
+
+% Student code: implement forward_kinematics_RR() and jacobian_RR()
+% Students run `record.py out1.csv` on lab machine to record a path.
+%   This will record a csv file with the 2 free joint angles.
+% Replay a recording with `replay.py out1.csv` on lab machine to have the arm replay a recorded path.
+% replay.py can be run in simulation to debug the fk implementation outside of lab.
+
+% Safety features:
+% - Arm will lock up if it's moved outside the safety box.
+% - The drawn safety box is accurate, but the robot's geometry is not a stick figure, so the actual arm will hit the box (abort) before the drawn arm does.
+% - Sometimes joints will lock while free-driving, when arm goes out-of-plane. Follow the prompts on screen and it'll automatically fix itself.
+
+% Other stuff
+% - Need to clean up student workstations (grippers lying around)
+
 \begin{submissionChecklist}
 			\item Create a PDF of your answers to the written questions with the name \verb!writeup.pdf!.
 		\item Make sure \verb!writeup.pdf! includes your saved sample-path plot and FK write-up from the Code Questions section.

@@ -32,9 +32,12 @@ MAX_STEP = 0.15
 class RRArm:
     """The xArm driven as the planar RR arm, drawn live with the student's FK."""
 
-    def __init__(self):
+    def __init__(self, start):
+        """`start` is the (theta1, theta2) the simulation spawns in, so the
+        replay does not begin with a long move in from the zero pose. The real
+        arm ignores it and starts wherever it already is."""
         self.plot = LivePlot(planned=True)
-        self.robot = Robot()
+        self.robot = Robot(q0=rr2q(*start))
 
     def new_trajectory(self, path):
         """Read the angles to follow, and clear the plot.
@@ -111,7 +114,11 @@ def main(argv=None):
                                           "by name within recordings/")
     path = recording_path(parser.parse_args(argv).recording)
 
-    arm = RRArm()
+    # Spawn the arm on the first sample of the recording rather than at the
+    # zero pose, so set_position has next to nothing to move through.
+    first = np.loadtxt(path, delimiter=",")[0]
+
+    arm = RRArm(start=first)
     try:
         arm.new_trajectory(path)
         run_trajectory(arm, path)

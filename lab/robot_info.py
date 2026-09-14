@@ -37,7 +37,7 @@ def rr2q(theta1, theta2):
     """The 7-joint configuration at the planar RR's (theta1, theta2)."""
     A1 = np.arctan2(LINK1_MM[1], LINK1_MM[0])  # 10.16 deg
     A2 = np.arctan2(LINK2_MM[1], LINK2_MM[0]) - A1  # 159.35 deg
-    q = np.zeros(6)
+    q = np.zeros(7)
     q[LOCKED_INDICES] = np.radians(LOCKED_ANGLES_DEG)
     q[0], q[3] = theta1 - A1, A2 - theta2
     return q

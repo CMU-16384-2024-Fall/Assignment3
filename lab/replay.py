@@ -24,10 +24,8 @@ from robot_info import RECORD_RATE, q2rr, qd2rr, rr2q
 
 RECORDINGS = Path(__file__).parent / "recordings"
 START_SPEED = 0.3  # rad/s, for set_position's planned move
-# rad in one sample. Hand-guided motion moves a joint a few hundredths of a
-# radian per sample (more in an older recording, where the controller's slower
-# position reports show up as steps); a bigger jump is a bug in the student's
-# code — degrees, theta1/theta2 swapped, or samples skipped.
+
+# Maximum joint value step in one sample; larger than that is probably a bug.
 MAX_STEP = 0.15
 
 

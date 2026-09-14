@@ -3,55 +3,18 @@
     python record.py                    # into recordings/rr-<timestamp>.csv
     python record.py my-circle.csv      # or wherever you say
 
-Set ROBOT_IP first: free drive is the controller's own teaching mode, so this
-script wants the real arm, and refuses the simulation `xarm7_lib.Robot` would
-otherwise fall back to.
+The robot starts from its current position, and first squares the locked
+joints (2, 3, 5, 6). If that move is refused, use
+        `python -m xarm7_lib.free_drive`
+to move the arm somewhere legal, then run this script again.
 
-The move squares joints 2, 3, 5 and 6 up to +90, +90, -90 and +90 degrees and
-leaves 1, 4 and 7 wherever it finds them. That is the "90 90 -90 90" locked
-set, and it leaves the axes of joints 1, 4 and 7 all parallel to world z.
-Joint 7's axis runs straight through the flange, so turning it only spins the
-tool: what is left is an exact planar RR turning in a horizontal plane, joint 1
-at the base and joint 4 at the elbow.
+Then this robot will enter joint teaching mode, and the arm is pushed by hand.
+Joints 2, 3, 5 and 6 are watched and put back if they drift. A live plot shows
+the RR arm and the path it has been through, with the end effector's velocity
+as an arrow off its tip. Ctrl-c ends the recording, and the path is saved.
 
-Because the free joints are left alone, the arm starts from wherever the last
-session put it. If that is somewhere it may not legally go — joint4 near 0 is
-the folded end of the elbow's travel, and puts the forearm back through link2 —
-the arm's own guard refuses the move, and the arm has to be moved clear first.
-
-After the move:
-
-    1. free drive. The controller's joint teaching mode lets the arm be
-       pushed by hand; joints 2, 3, 5 and 6 are watched and put back if they
-       drift (see `xarm7_lib/free_drive.py`). A live plot, drawn with the
-       student's `forward_kinematics_RR` from `fk.py`, shows the RR arm and
-       the path it has been through, with the end effector's velocity — the
-       measured joint speeds through the student's `jacobian_RR` — as an
-       arrow off the tip. Everything from here on is recorded.
-    2. ctrl-c ends it: the arm stops where it stands, and the path is saved
-       to recordings/.
-
-That is one recording; run the script again for the next. The arm is left
-holding wherever free drive ended, which is where the next run starts from —
-it only squares the locked joints up again. Nothing checks that the workspace
-is clear, so only start the script when it already is.
-
-A recording is a plain csv of the RR joint angles and nothing else, two
-columns (theta1, theta2) in radians, resampled onto an even 100 Hz grid so
-that row k is the arm at k / 100 s:
-
-    # theta1,theta2 in radians, 100 Hz
-    -1.0442802157,2.8065783519
-    -1.0442798226,2.8065779411
-    ...
-
-That is what `replay.py` streams back. Everything else about the arm — the
-pose the locked joints are held at, the link lengths, where the FK puts the
-end effector — comes from `robot_info.py` and `fk.py` at replay time, not from
-the file. So a replay always uses today's `fk.py`, on the angles as recorded.
-
-The pose is printed in degrees; everything else here is radians, like the rest
-of the library.
+Each recording is a plain csv of the RR joint angles, which can be replayed
+with `replay.py`.
 """
 
 from datetime import datetime
@@ -73,15 +36,7 @@ from robot_info import LOCKED_ANGLES_DEG, LOCKED_INDICES, RECORD_RATE, q2rr, qd2
 
 
 class CtrlC:
-    """Ctrl-c as a request to finish, noticed at the next safe point.
-
-    A KeyboardInterrupt goes off in whatever happens to be running. In free
-    drive that is mostly matplotlib redrawing inside Tk, whose callback wrapper
-    catches it, prints it as an error, and carries on. So inside this context
-    SIGINT only sets `requested`, which the free-drive tick and the prompts
-    check. A second ctrl-c raises anyway, in case something is stuck.
-    """
-
+    """Ctrl-c as a request to finish, noticed at the next safe point."""
     def __init__(self):
         self.requested = False
 
@@ -101,7 +56,6 @@ class CtrlC:
 
 def reset(arm):
     """Move the arm to the locked pose, leaving the free joints wherever they are.
-
     The locked joints are 2, 3, 5 and 6 at +90, +90, -90 and +90 degrees.
     """
     start = arm.joint_values

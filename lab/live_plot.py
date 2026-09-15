@@ -39,7 +39,7 @@ def arm_points(q):
     effector, so the arm is those two origins hung off the base.
     """
     H = forward_kinematics_RR(*q)
-    return np.array([[0.0, 0.0], H["H_2_0"][:2, 2], H["H_4_0"][:2, 2]])
+    return np.array([[0.0, 0.0], H["H_2_0"][:2, 2], H["H_3_0"][:2, 2]])
 
 
 def eef_velocity(q, qd):

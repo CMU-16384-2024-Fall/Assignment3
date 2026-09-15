@@ -643,6 +643,7 @@ newer:
     git clone https://github.com/CMU-16384-2026-Fall/16384-robot-lib
     cd 16384-robot-lib
     git pull                        # if you already had it cloned
+    conda activate 16384            # if not already activated
     conda env update -f environment.yml
     conda activate 16384
 \end{verbatim}
@@ -672,13 +673,13 @@ home, with no robot.
     This question is graded by hand, from one video you record in lab.  Read the
     deliverable at the end before you go, so you know what the video has to show.
 
+    \begin{center}
+        \includegraphics[width=0.3\textwidth]{generated_figures/RR_lab.png}
+    \end{center}
+
     \paragraph{To-Do 1: Forward Kinematics} Open \verb!fk.py! and fill in
     \verb!forward_kinematics_RR!, which returns two $3\times3$ planar homogeneous
-    transforms.  Number the frames along the chain the way you did in the last
-    assignment --- a rotation at each joint, a translation along each link --- so
-    that $\H{2}{0}$ is the frame at the far end of link 1 (the elbow) and
-    $\H{4}{0}$ is the frame at the far end of link 2 (the end effector), both
-    expressed in the base frame.
+    transforms for frames $\{2\}$ and $\{3\}$. The frames are labeled in the figure above.
 
     \paragraph{To-Do 2: The Jacobian} Fill in \verb!jacobian_RR!, the $2\times2$
     end-effector \emph{position} Jacobian $\J$ at $(\th[1], \th[2])$: column $i$
@@ -693,35 +694,31 @@ home, with no robot.
 
     \paragraph{Checking Your Work in Simulation} The \verb!lab! folder ships a
     sample recording, \verb!square.csv!, so you can test both functions before you
-    ever touch a robot.  With \verb!ROBOT_IP! unset, run:
+    ever touch a robot.  On your own machine, run:
     \begin{verbatim}
-    python replay.py square.csv
-\end{verbatim}
+        python replay.py square.csv
+    \end{verbatim}
     Two windows open: the simulated xArm7 in a browser tab (its address is also
     printed as \verb!Meshcat: ...! when the script starts), and a top-down plot
     of the arm drawn entirely by \emph{your} code.  The plot is drawn as if you
     were standing in front of the robot, looking down: the base is at the top,
     the robot's $+x$ axis points down the screen towards you, and its $+y$ axis
-    to your right.  In it you should see
-    \begin{itemize}
-      \item the blue stick figure lying on top of the simulated arm, with its
-            elbow at the simulated arm's elbow;
-      \item the solid black path the end effector traces landing on the dotted
-            orange path it was asked to follow;
-      \item the green arrow pointing along the direction of travel, growing when
-            the arm moves faster and shrinking to nothing when it stops.
-    \end{itemize}
+    to your right.  In it you should see a plot like the following screenshot:
+
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{generated_figures/replay_screenshot.png}
+    \end{center}
+
+    Your code in \verb|fk.py| will determine the blue arm, the black \& orange paths, and the green arrow. Those should match the above screenshot at some point in time. Note that the estimated velocity (green arrow) is noisy, so it will fluctuate during the replay.
+
     If something is off, the symptom tells you which To-Do to look at:
     \begin{itemize}
       \item The drawn arm does not match the simulated arm --- \verb!forward_kinematics_RR!.
             Note that only the translation column of each transform is used to draw
             the arm, so check the rotation blocks too; they can be wrong while the
             picture still looks reasonable.
-      \item The path is right but the arrow points the wrong way, or has wildly
+      \item The path is right but the arrow points the wrong way, or has
             the wrong length --- \verb!jacobian_RR!.
-      \item \verb!a 0.213 rad jump at sample 57! --- the samples reaching the arm
-            are out of order, in degrees rather than radians, or $\th[1]$ and
-            $\th[2]$ the wrong way round.
     \end{itemize}
     Sort all of this out before your lab session; the arm is a slow place to
     debug a sign error.
@@ -729,12 +726,9 @@ home, with no robot.
     \begin{tcolorbox}[colback=red!5, colframe=red!60!black,
         title={Safety: Read this before you touch the robot}]
     \begin{itemize}
-      % TODO: exact power-on sequence (controller box switch, wait time, what the
-      % status light should look like) --- confirm with the lab staff.
       \item \textbf{Powering on.} Ask a TA during their office hours to walk you through powering up and
             enabling your station the first time.  Do not power-cycle the
             controller yourself if the arm is in an unexpected state; ask.
-      % TODO: say exactly where the e-stop is on the workstation.
       \item \textbf{The e-stop.} Know where the emergency stop button is
             \emph{before} you start, and keep it within reach.  Press it for
             anything you did not expect --- an unexpected motion, a noise, a
@@ -759,18 +753,14 @@ home, with no robot.
             so the real arm will trip the boundary before the drawing appears to
             touch it.
       \item \textbf{The motors stay on.} When a script exits, the arm is left
-            stopped but still energized and holding its position.  That is
-            deliberate: switching the motors off would let it fall under its own
-            weight.
+            stopped but still energized and holding its position.
+        \item \textbf{Powering down.} When you are done, power down the arm and press in the E-stop. If you leave the arm on, the motors stay powered and will eventually overheat.
     \end{itemize}
     \end{tcolorbox}
     \newpage
 
     \paragraph{Recording a Path} At your station:
     \begin{enumerate}
-      % TODO: confirm whether ROBOT_IP is already set on the lab machines; if it
-      % is not, give students the per-station address here.
-      % TODO: confirm which editors are installed on the lab machines.
       \item Get your code onto the machine with \verb!git pull!.  You can edit in
             place with \verb!vim! or \verb!nano!, but it is usually easier to edit
             on your laptop, push, and pull again.
@@ -791,11 +781,9 @@ python record.py my-path.csv
             in \verb!recordings/! with a timestamp for a name.
     \end{enumerate}
 
-    \paragraph{Replaying It} Play the recording back on the arm with the same
+    \paragraph{Replaying} Play the recording back on the arm with the same
     script you tested in simulation:
-    \begin{verbatim}
-    python replay.py my-path.csv
-\end{verbatim}
+    \begin{verbatim}python replay.py my-path.csv\end{verbatim}
     The arm moves to the first sample of the recording, then streams the rest of
     it.  On the plot, the dotted orange path is what you recorded, and the solid
     black path is where your forward kinematics says the arm actually went ---

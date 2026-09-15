@@ -10,14 +10,14 @@ def forward_kinematics_RR(theta1, theta2):
     l1, l2 = robot_info()['link_lengths']
 
     # ============ BEGIN STUDENT SECTION ==============
-    # To-Do 1: Compute the homogeneous transformation matrices H_2_0 and H_4_0
+    # To-Do 1: Compute the homogeneous transformation matrices H_2_0 and H_3_0
     H_2_0 = np.eye(3)
-    H_4_0 = np.eye(3)
+    H_3_0 = np.eye(3)
     # ============ END STUDENT SECTION ==============
 
     return {
         'H_2_0': H_2_0,  # the elbow, in the base frame
-        'H_4_0': H_4_0,  # the end effector, in the base frame
+        'H_3_0': H_3_0,  # the end effector, in the base frame
     }
 
 

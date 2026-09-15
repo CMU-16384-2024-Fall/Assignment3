@@ -23,6 +23,14 @@ code/calculated_path.csv
 code/ground_truth_path.csv
 code/*.png
 
+# --- Hands-on lab (student recordings and videos) ---
+lab/recordings/
+lab/handin/*
+!lab/handin/README.md
+*.mp4
+*.mov
+*.webm
+
 # --- Submission / archive artifacts ---
 *_hw3.zip
 

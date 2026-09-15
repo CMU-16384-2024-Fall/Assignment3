@@ -15,6 +15,13 @@ the chain of homogeneous frames, and the end effector is the last frame. See
   - `create_submission.py` — packages `Robot.py` into the zip to upload.
   - `sample_ground_truth.csv` — the sample 2-link log `sample_path.py` uses.
 - `local_autograder/` — the local self-check (see below).
+- `lab/` — the hands-on lab code for the real xArm7 (see below):
+  - `fk.py` — **the file you edit.** Fill in `forward_kinematics_RR` and
+    `jacobian_RR`.
+  - `record.py` / `replay.py` — hand-guide the arm to record a path, and play a
+    recording back.
+  - `square.csv` — a sample recording, so you can test your code in simulation.
+  - `handin/` — where your replay video goes.
 - `latex/` — the document class and figures for the writeup.
 
 The due date is on Canvas.
@@ -79,6 +86,36 @@ every run (it computes the answers from the reference solution, not from any
 file). A correct, general `forward_kinematics` passes both; code hard-coded to
 these exact numbers passes here but fails on Gradescope.
 
+## The hands-on lab
+
+`lab/` runs your kinematics on a real (or simulated) xArm7, driven as a planar
+RR arm. It needs the course robot library, `xarm7_lib`, which this assignment
+needs a recent version of:
+
+```bash
+git clone https://github.com/CMU-16384-2026-Fall/16384-robot-lib
+cd 16384-robot-lib
+git pull                        # if you already had it cloned
+conda env update -f environment.yml
+conda activate 16384
+```
+
+Fill in `forward_kinematics_RR` and `jacobian_RR` in `lab/fk.py`, then check
+them against the provided sample recording. With `ROBOT_IP` unset this runs the
+MuJoCo simulation, so it needs no robot:
+
+```bash
+cd lab
+python replay.py square.csv
+```
+
+In lab, with `ROBOT_IP` set to your station's controller, the same scripts drive
+the real arm — `python record.py my-path.csv` to hand-guide a path, then
+`python replay.py my-path.csv` to play it back. Put your replay video and its
+recording in `lab/handin/`; `create_submission.py` packages them.
+
+See `assignment3.pdf` for the safety rules and the full lab procedure.
+
 ## Submitting
 
 From `code/`, build the upload zip and submit it to Gradescope:
@@ -88,5 +125,6 @@ cd code
 python create_submission.py
 ```
 
-It asks for your Andrew ID and writes `<andrewid>_hw3.zip` containing `Robot.py`.
-Upload that zip to the HW3 autograder on Gradescope.
+It asks for your Andrew ID and writes `<andrewid>_hw3.zip` containing `Robot.py`,
+`lab/fk.py`, and everything in `lab/handin/`. Upload that zip to the HW3
+autograder on Gradescope.

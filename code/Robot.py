@@ -52,8 +52,9 @@ class Robot:
         frames = np.zeros((3, 3, self.dof + 1))
         n = self.dof
         
-        # FILL IN 3x3 HOMOGENEOUS TRANSFORM FOR n + 1 FRAMES
+        # TODO:  FILL IN 3x3 HOMOGENEOUS TRANSFORM FOR n + 1 FRAMES
         # You'll need to implement the forward kinematics calculation here
+        
         
         return frames
 

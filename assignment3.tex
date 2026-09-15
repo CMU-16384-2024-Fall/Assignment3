@@ -1,7 +1,13 @@
-\newcommand{\duedate}{26 September 2024}
-\documentclass{16384_doc} %% Change for your computer
+\newcommand{\duedatetime}{See Canvas for the due date}
+% 16384_doc.cls lives in latex/ relative to this file; input@path lets
+% \documentclass find it there without changing directory structure.
+\makeatletter
+\def\input@path{{latex/}}
+\makeatother
+\documentclass{16384_doc}
 
 \newcommand{\assignmentname}{Assignment 3: Inverse Differential Kinematics}
+\graphicspath{{latex/}}
 
 \begin{document}
 \maketitle
@@ -141,10 +147,12 @@ result in $J^{-1}$.
 
 In this class you would be using the following websites regularly:
 \begin{itemize}
-    \item \href{https://canvas.cmu.edu/courses/42018}{Canvas}: The main course web page. This links to everything relevant to the class (including the next two links).
-    \item \href{https://piazza.com/class/m09xl90abke42b}{Piazza}: This is the best way to ask course staff questions, and see course announcements.
-    \item \href{https://www.gradescope.com/courses/820155/assignments/4876306/submissions}{Gradescope}: This is where you will be turning in your homework. You should have already been added to the course. If you haven't, please contact the course staff via email or Piazza post.
-\end{itemize}    
+    \item \href{https://canvas.cmu.edu/courses/56566}{Canvas}: The main course web page. This links to everything relevant to the class (including the next two links).
+    \item \href{https://piazza.com/class/mt8vtez94dv38b}{Piazza}: This is the best way to ask course staff questions, and see course announcements.
+    \item \href{https://www.gradescope.com/courses/1369131}{Gradescope}: This is where you will be turning in your homework. You should have already been added to the course. If you haven't, please contact the course staff via email or Piazza post.
+\end{itemize}
+
+You can write your \verb!writeup.pdf! in \href{https://www.overleaf.com/}{Overleaf}: upload the assignment zip as a new project, and use \verb!assignment3.tex! as your template (it pulls in \verb!16384_doc.cls! and the figures from the \verb!latex/! folder automatically).
 
 \writtenSection
 
@@ -184,10 +192,10 @@ In this class you would be using the following websites regularly:
         correct, but do not worry about the magnitude. You can complete this
         problem by inspection or by using properties of the Jacobian.
 
-        \begin{tcolorbox}[height=3cm]
+        \begin{tcolorbox}[height=8cm]
             % TODO: ENTER YOUR ANSWER HERE
         \end{tcolorbox}
-        
+
         \item \text{[2 points]} What is the dimension of the space spanned by this vector?
         \begin{tcolorbox}[height=3cm]
             % TODO: ENTER YOUR ANSWER HERE
@@ -250,10 +258,10 @@ In this class you would be using the following websites regularly:
         magnitudes should be approximately correct, but do not worry about
         exact magnitudes.  You can complete this problem by inspection or by
         using properties of the Jacobian.
-        \begin{tcolorbox}[height=3cm]
+        \begin{tcolorbox}[height=8cm]
             % TODO: ENTER YOUR ANSWER HERE
         \end{tcolorbox}
-        
+
         \item \text{[2 points]} What is the dimension of the space spanned by these vectors?
         Are the 1st and 2nd vectors linearly independent?
         \begin{tcolorbox}[height=3cm]
@@ -314,10 +322,10 @@ In this class you would be using the following websites regularly:
         magnitudes should be approximately correct, but do not worry about
         exact magnitudes.  You can complete this problem by inspection or by
         using properties of the Jacobian.
-        \begin{tcolorbox}[height=3cm]
+        \begin{tcolorbox}[height=6.5cm]
             % TODO: ENTER YOUR ANSWER HERE
         \end{tcolorbox}
-        
+
         \item \text{[2 points]} What is the dimension of the space spanned by these vectors?
         Are the 1st and 2nd vectors linearly independent? The 1st and 3rd?  The
         2nd and 3rd? All three?
@@ -347,9 +355,9 @@ In this class you would be using the following websites regularly:
     \end{center}
     \begin{enumerate} [label=\alph*.]
         \item \text{[1 point]} What is the dimension of the end-effector Jacobian, now considering
-        \begin{bmatrix}
+        $\begin{bmatrix}
             x \\ y \\ \theta
-        \end{bmatrix}
+        \end{bmatrix}$
         %\smcolvec{x\\y\\\th}
         end-effector positions in $SE(2)$.
         \begin{tcolorbox}[height=3cm]
@@ -427,10 +435,10 @@ In this class you would be using the following websites regularly:
         magnitudes should be approximately correct, but do not worry about
         exact magnitudes.  You can complete this problem by inspection or by
         using properties of the Jacobian.
-        \begin{tcolorbox}[height=3cm]
+        \begin{tcolorbox}[height=6cm]
             % TODO: ENTER YOUR ANSWER HERE
         \end{tcolorbox}
-        
+
         \item \text{[2 points]} What is the dimension of the space spanned by these vectors? Are
         the 1st and 2nd vectors linearly independent? The 1st and 3rd?  The 2nd
         and 3rd? All three?
@@ -493,17 +501,26 @@ In this class you would be using the following websites regularly:
 
 \section{Code Questions}
   
-Copy the Code Handout folder to some location of your choice. Open Matlab and navigate to that location. Whenever you work on the assignment, go into this directory and run \verb!setup.m!. 
+Ensure Python and the
+NumPy and Matplotlib libraries are correctly installed.
+
+For Python installation, visit:
+\begin{center}
+    \href{https://www.python.org/downloads/}{https://www.python.org/downloads/}
+\end{center}
+For NumPy and Matplotlib, install via pip:
+\begin{verbatim}
+    pip install numpy matplotlib
+\end{verbatim}
+
+After setting up, download the \verb!code! folder from the \href{https://github.com/CMU-16384-2026-Fall/Assignment3}{GitHub repository} and navigate to that location. Whenever you work on the assignment, run your scripts from inside this directory.
 
 \begin{questions}
-    \titledquestion{\text{[50 points]} General Robot Class} 
-    Open directory \verb!ex_01!.
-    Surely, you don't want to keep writing forward kinematics and Jacobians for
-    every single assignment in this class!
+    \titledquestion{\text{[50 points]} General Robot Class}
+    Open directory \verb!code!.
     For this exercise, we will walk you through the creation of a general Python
-    class that we will continue to use and extend for the remainder of this
-    class. We will begin with writing forward kinematics for any RR arm, and
-    then compute the Jacobian for any RR arm.
+    class representing a fixed-base kinematic chain. You will implement
+    forward kinematics for any RR arm.
     First, open the file \verb!Robot.py!, and study this file. This is a basic Python
     class. The idea here is that you can pass parameters to the \emph{constructor} of
     the robot class, and the returned object then has methods that can be
@@ -538,15 +555,35 @@ Copy the Code Handout folder to some location of your choice. Open Matlab and na
     \paragraph{Verification and Submission} To verify your results:
     \begin{enumerate}
       \item Run the \verb!sample_path! function. This will generate a plot and save
-            two NumPy array files: \verb!calculated_path.npy! and \verb!ground_truth_path.npy!.
-      \item The autograder on Gradescope will use a \verb!test_path_overlap.py! script to
-            test your implementation. This script will load the saved paths, calculate
-            the overlap between your calculated path and the ground truth, and verify
-            that the overlap is 90\% or greater.
+            two CSV files: \verb!calculated_path.csv! and \verb!ground_truth_path.csv!.
+            This is for your own reference, to check whether your output matches
+            the sample test case.
+      \item Run the local self-check before submitting: from the
+            \verb!local_autograder! directory, run
+            \begin{verbatim}
+python local_autograder.py
+            \end{verbatim}
+            This runs your \verb!Robot.fk! over 25 published test arms (chain
+            lengths 2 through 6) and prints PASS/FAIL for each. A FAIL message
+            tells you what to look for:
+            \begin{itemize}
+              \item \verb!<n>/<total> poses off by > 1 cm! --- \verb!fk! runs
+                    but returns the wrong position; check your homogeneous
+                    transforms.
+              \item \verb!raised <ExceptionType>: <message>! --- \verb!fk!
+                    crashed; the message says where.
+              \item \verb!end-effector path has the wrong shape or is not finite!
+                    --- your output isn't the expected $(N, 2)$ array, or it
+                    contains NaN/inf.
+            \end{itemize}
+      \item The autograder on Gradescope will check your implementation against
+            the same 25 arms and joint angles, but perturbs each one a little
+            and checks against the reference solution instead of a file. If the
+            local check above passes, you should pass on Gradescope too.
       \item To submit your work:
         \begin{itemize}
-          \item Run the \verb!create_submission.py! script provided in the \verb!ex_01! directory.
-                This will zip up all necessary files in the \verb!ex_01! folder.
+          \item Run the \verb!create_submission.py! script provided in the \verb!code! directory.
+                This will zip up all necessary files in the \verb!code! folder.
           \item Submit the resulting zip file to Gradescope.
         \end{itemize}
     \end{enumerate}
@@ -555,15 +592,257 @@ Copy the Code Handout folder to some location of your choice. Open Matlab and na
     encountered.
 \end{questions}
 
+\section{Hands-on Lab}
+
+% STAFF TODO (not for students): clean up the student workstations before the
+% lab opens --- there are grippers lying around on several of them.
+
+So far the arms in this assignment have been drawings.  In this section you will
+put your own kinematics on a real one: a seven-joint UFACTORY xArm7, driven as
+the planar RR arm you have been working with all along.  You will implement its
+forward kinematics and its Jacobian, check them against the simulator from your
+own machine, and then --- in lab --- push the real arm by hand through a path of
+your choosing and watch it replay that path while your kinematics draw it live.
+
+% TODO: fill in the lab room and workstation names, the access hours, and
+% whether students sign up for a slot or walk in.
+The robots live in the \emph{Robotics Engineering Lab}.  Please be mindful of
+others and share the robots fairly: check Piazza for signups.
+
+\subsection{The xArm7 as a Planar RR Arm}
+
+The xArm7 has seven revolute joints; the arm in the written questions has two,
+in a plane.  The two become the same mechanism once four of the seven joints are
+held still.  Holding
+\[
+    \th[2] = \piover{2}, \quad
+    \th[3] = \piover{2}, \quad
+    \th[5] = -\piover{2}, \quad
+    \th[6] = \piover{2}
+\]
+leaves joints 1 and 4 turning about axes that are both parallel to the world
+$z$-axis, so the end effector moves in a horizontal plane and the arm is an RR
+arm lying on its side.  (Joint 7 is left free as well, but its axis is that same
+vertical one and it only spins the tool about itself, so it does not move the
+point you are tracing.)  Joints 1 and 4 are the \emph{free} joints, and their
+angles --- after a fixed offset, which \verb!robot_info.py! handles for you ---
+are the $\th[1]$ and $\th[2]$ of your RR arm.
+
+The two links are not round numbers, because they come from where the xArm7's
+joints actually are: $\l[1] = 0.2977$ m from the shoulder to the elbow and
+$\l[2] = 0.4256$ m from the elbow to the wrist.  Read them from
+\verb!robot_info()['link_lengths']! rather than typing them in --- the starter
+code already does this for you.
+
+\subsection{Setting Up}
+
+The lab code needs the course robot library, \verb!xarm7_lib!.  If you installed
+it earlier in the semester, update it, since the version this assignment needs is
+newer:
+\begin{verbatim}
+    git clone https://github.com/CMU-16384-2026-Fall/16384-robot-lib
+    cd 16384-robot-lib
+    git pull                        # if you already had it cloned
+    conda activate 16384            # if not already activated
+    conda env update -f environment.yml
+    conda activate 16384
+\end{verbatim}
+
+\noindent Then get this assignment's lab code, which is the \verb!lab! folder of
+the same \href{https://github.com/CMU-16384-2026-Fall/Assignment3}{GitHub
+repository} you downloaded \verb!code! from:
+\begin{verbatim}
+    cd Assignment3/lab
+\end{verbatim}
+
+\noindent Run every command in this section from inside that \verb!lab! folder.
+Work in a Git repository that you can push from and pull onto the lab machine:
+you will write your code on your own machine, and the fastest way to get it onto
+the robot's computer is \verb!git pull!.
+
+The same scripts drive either the real arm or a MuJoCo simulation, and they
+choose between them by looking at the \verb!ROBOT_IP! environment variable: set,
+and they talk to the arm at that address; unset, and you get the simulation.  So
+everything below except the recording itself can be developed and debugged at
+home, with no robot.
+
+\begin{questions}
+
+    \titledquestion{\text{[50 points]} Tracing a Path on the xArm7}
+
+    This question is graded by hand, from one video you record in lab.  Read the
+    deliverable at the end before you go, so you know what the video has to show.
+
+    \begin{center}
+        \includegraphics[width=0.3\textwidth]{generated_figures/RR_lab.png}
+    \end{center}
+
+    \paragraph{To-Do 1: Forward Kinematics} Open \verb!fk.py! and fill in
+    \verb!forward_kinematics_RR!, which returns two $3\times3$ planar homogeneous
+    transforms for frames $\{2\}$ and $\{3\}$. The frames are labeled in the figure above.
+
+    \paragraph{To-Do 2: The Jacobian} Fill in \verb!jacobian_RR!, the $2\times2$
+    end-effector \emph{position} Jacobian $\J$ at $(\th[1], \th[2])$: column $i$
+    is how fast the end effector moves, and in what direction, when joint $i$
+    turns at unit speed.  It is what turns joint velocities into the end
+    effector's velocity,
+    \[
+        \colvec{\xd \\ \yd} = \J(\th[1], \th[2]) \colvec{\thd[1] \\ \thd[2]},
+    \]
+    and the plot below draws exactly that product as an arrow off the end
+    effector, so a correct Jacobian is something you can see.
+
+    \paragraph{Checking Your Work in Simulation} The \verb!lab! folder ships a
+    sample recording, \verb!square.csv!, so you can test both functions before you
+    ever touch a robot.  On your own machine, run:
+    \begin{verbatim}
+        python replay.py square.csv
+    \end{verbatim}
+    Two windows open: the simulated xArm7 in a browser tab (its address is also
+    printed as \verb!Meshcat: <url>! when the script starts), and a top-down plot
+    of the arm drawn entirely by \emph{your} code.  The plot is drawn as if you
+    were standing in front of the robot, looking down: the base is at the top,
+    the robot's $+x$ axis points down the screen towards you, and its $+y$ axis
+    to your right.  In it you should see a plot like the following screenshot:
+
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{generated_figures/replay_screenshot.png}
+    \end{center}
+
+    Your code in \verb|fk.py| will determine the blue arm, the black \& orange paths, and the green arrow. Those should match the above screenshot at some point in time. Note that the estimated velocity (green arrow) is noisy, so it will fluctuate during the replay.
+
+    If something is off, the symptom tells you which To-Do to look at:
+    \begin{itemize}
+      \item The drawn arm does not match the simulated arm --- \verb!forward_kinematics_RR!.
+            Note that only the translation column of each transform is used to draw
+            the arm, so check the rotation blocks too; they can be wrong while the
+            picture still looks reasonable.
+      \item The path is right but the arrow points the wrong way, or has
+            the wrong length --- \verb!jacobian_RR!.
+    \end{itemize}
+    Sort all of this out before your lab session; the arm is a slow place to
+    debug a sign error.
+
+    \begin{tcolorbox}[colback=red!5, colframe=red!60!black,
+        title={Safety: Read this before you touch the robot}]
+    \begin{itemize}
+      \item \textbf{Powering on.} Ask a TA during their office hours to walk you through powering up and
+            enabling your station the first time.  Do not power-cycle the
+            controller yourself if the arm is in an unexpected state; ask.
+      \item \textbf{The e-stop.} Know where the emergency stop button is
+            \emph{before} you start, and keep it within reach.  Press it for
+            anything you did not expect --- an unexpected motion, a noise, a
+            cable catching.  Stopping the arm for no reason costs you nothing.
+      \item \textbf{Stay out of the workspace.} Never put any part of yourself
+            inside the arm's reach while it can move under its own power.  The
+            only time you touch the arm is when you are hand-guiding it, and the
+            scripts tell you when that is.
+      \item \textbf{``Press enter when your hands are clear'' means it.} The
+            recording pauses with that prompt whenever it is about to move the
+            arm on its own.  Let go, step back, then press enter.
+      \item \textbf{The safety box.} The arm is confined to a box around its
+            base, drawn in red on the live plot:
+            \[
+                x \in [-0.10,\ 0.70]\ \text{m}, \quad
+                y \in [-0.45,\ 0.45]\ \text{m}, \quad
+                z \in [0.00,\ 0.80]\ \text{m}.
+            \]
+            A command that would take the arm out of the box is refused outright
+            rather than started and stopped part-way.  The drawn box is accurate,
+            but the drawn \emph{arm} is a stick figure and the real one has width,
+            so the real arm will trip the boundary before the drawing appears to
+            touch it.
+      \item \textbf{The motors stay on.} When a script exits, the arm is left
+            stopped but still energized and holding its position.
+        \item \textbf{Powering down.} When you are done, power down the arm and press in the E-stop. If you leave the arm on, the motors stay powered and will eventually overheat.
+    \end{itemize}
+    \end{tcolorbox}
+    \newpage
+
+    \paragraph{Recording a Path} At your station:
+    \begin{enumerate}
+      \item Get your code onto the machine with \verb!git pull!.  You can edit in
+            place with \verb!vim! or \verb!nano!, but it is usually easier to edit
+            on your laptop, push, and pull again.
+      \item Start the recording, naming the file you want:
+            \begin{verbatim}
+python record.py my-path.csv
+            \end{verbatim}
+            The script first squares the locked joints (2, 3, 5 and 6) so that
+            the arm is in the RR plane.  If that move is refused because the arm
+            is parked somewhere it is not allowed to move from, see
+            \textbf{When the arm gets stuck} below, then run it again.
+      \item The arm then unlocks and you push it by hand.  Trace a path you
+            will recognize later --- a square, a circle, your initials.  Watch the
+            live plot as you go: the blue arm should follow your hand, and the
+            green arrow should point the way you are pushing.
+      \item Press Ctrl-C to stop.  The recording is saved as a plain CSV of the
+            two joint angles, sampled at 100 Hz; with no filename given it lands
+            in \verb!recordings/! with a timestamp for a name.
+    \end{enumerate}
+
+    \paragraph{Replaying} Play the recording back on the arm with the same
+    script you tested in simulation:
+    \begin{verbatim}python replay.py my-path.csv\end{verbatim}
+    The arm moves to the first sample of the recording, then streams the rest of
+    it.  On the plot, the dotted orange path is what you recorded, and the solid
+    black path is where your forward kinematics says the arm actually went ---
+    the arm's own measured joint angles, through your code.
+
+    \paragraph{When the Arm Gets Stuck} Two things will happen to you, and
+    neither is a breakage:
+    \begin{itemize}
+      \item \textbf{A locked joint drifts.} While you are hand-guiding, every
+            joint is free, including the four that are supposed to stay put.  Push
+            the arm out of its plane and one of them will drift far enough that
+            the recording stops itself, tells you to take your hands off, and ---
+            once you press enter --- slowly puts that joint back before carrying
+            on.  Follow the prompts; it fixes itself.
+      \item \textbf{The arm is parked somewhere it cannot move from.} If a script
+            refuses to move the arm at all, hand-guide it back to a legal pose:
+            \begin{verbatim}
+python -m xarm7_lib.free_drive
+            \end{verbatim}
+            This releases every joint so you can push the arm wherever you want,
+            and locks it there when you press enter.  Then re-run the script that
+            refused.
+    \end{itemize}
+
+    \paragraph{Deliverable} Record \textbf{one video} of your replay, with both
+    of these in frame at the same time:
+    \begin{itemize}
+      \item the real arm replaying the path you traced, with the whole arm
+            visible; and
+      \item the monitor showing the live plot --- your arm
+            drawn by your forward kinematics, the path it traces, and the green
+            velocity arrow from your Jacobian.
+    \end{itemize}
+    A phone video is fine, in any common format (\verb!.mp4!, \verb!.mov!,
+    \verb!.webm!).  Show at least one complete traversal of your path.  Put the
+    video, together with the recording it replays, in the \verb!lab/handin!
+    folder:
+    \begin{verbatim}
+    lab/handin/my-video.mp4
+    lab/handin/my-path.csv
+\end{verbatim}
+    \verb!create_submission.py! picks up everything in that folder, along with
+    your \verb!lab/fk.py!, and puts it in the same zip as your \verb!Robot.py!.
+
+\end{questions}
+
 \begin{submissionChecklist}
 			\item Create a PDF of your answers to the written questions with the name \verb!writeup.pdf!.
-		\item Make sure you have \verb!writeup.pdf! in the same folder as the \verb!create_submission.m! script.
-		\item Run \verb!create_submission.m! in Matlab.
-		\item Upload \verb!handin-3.tar.gz! to Gradescope.
+		\item Make sure \verb!writeup.pdf! includes your saved sample-path plot and FK write-up from the Code Questions section.
+		\item Complete \verb!forward_kinematics_RR! and \verb!jacobian_RR! in \verb!lab/fk.py!.
+		\item Confirm \verb!python replay.py square.csv! looks right in simulation before your lab session.
+		\item Record a path on the real arm with \verb!record.py!, and replay it with \verb!replay.py!.
+		\item Put your replay video and the recording it replays in the \verb!lab/handin! folder.
+		\item Run \verb!create_submission.py! inside the \verb!code! directory to generate the submission zip file.
+		\item Upload the resulting \verb!<andrew_id>_hw3.zip! to Gradescope.
 		\item Upload \verb!writeup.pdf! to Gradescope.
 		% \item After completing the entire assignment, fill out the feedback
 		% form\footnotemark.
-		%~and make sure to add the submission code as the answer to the feedback section. 
+		%~and make sure to add the submission code as the answer to the feedback section.
 		% \footnotetext{\texttt{\href{\feedbackURL}{\feedbackURL}}}
 	\end{submissionChecklist}
 
